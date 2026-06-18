@@ -31,9 +31,9 @@ if uploaded_file:
     st.sidebar.write(f"อัปเดตล่าสุด: {datetime.now().strftime('%d %B %Y เวลา %H:%M น.')}")
 
     with st.spinner('กำลังประมวลผลข้อมูล...'):
-        df1 = get_data(uploaded_file, 'Sheet1', 'หมายเลขเครื่องจักร')
-        df_own = get_data(uploaded_file, 'Sheet2', 'หมายเลขเครื่องจักรกล')
-        df_comp = get_data(uploaded_file, 'Sheet4', 'หมายเลขเครื่องจักรกล')
+       df1 = get_data(uploaded_file, 'Sheet1', 'หมายเลขเครื่องจักร')
+df_own = get_data(uploaded_file, 'ซ่อมเอง', 'หมายเลขเครื่องจักรกล')
+df_comp = get_data(uploaded_file, 'เบ็ดเสร็จ', 'หมายเลขเครื่องจักรกล')
 
     if df1 is not None and df_own is not None and df_comp is not None:
         # คำนวณตาม Logic ที่ยืนยันแล้ว
