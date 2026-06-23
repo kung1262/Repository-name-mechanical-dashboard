@@ -18,27 +18,26 @@ def is_valid_machine_id(val):
 ```
 
 def get_data(file, sheet, anchor):
-try:
-df_raw = pd.read_excel(
-file,
-sheet_name=sheet,
-header=None
-)
+    try:
+        df_raw = pd.read_excel(
+            file,
+            sheet_name=sheet,
+            header=None
+        )
 
-```
-    for i, row in df_raw.iterrows():
-        if anchor in row.values:
-            df = pd.read_excel(
-                file,
-                sheet_name=sheet,
-                header=i
-            )
-            return df.dropna(how="all")
+        for i, row in df_raw.iterrows():
+            if anchor in row.values:
+                df = pd.read_excel(
+                    file,
+                    sheet_name=sheet,
+                    header=i
+                )
+                return df.dropna(how="all")
 
-except Exception:
+    except Exception:
+        return None
+
     return None
-
-return None
 ```
 
 st.title("📊 Executive Dashboard : ส่วนเครื่องกล")
