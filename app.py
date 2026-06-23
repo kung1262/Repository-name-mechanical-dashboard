@@ -83,15 +83,11 @@ with st.spinner("กำลังประมวลผลข้อมูล..."):
 if df1 is not None and df_own is not None and df_comp is not None:
 
     repair_list = df1[
-        df1["เครื่องจักรรอซ่อม"].apply(
-            is_valid_machine_id
-        )
+        df1["เครื่องจักรรอซ่อม"].apply(is_valid_machine_id)
     ]
 
     vacant_list = df1[
-        df1["เครื่องจักรว่าง"].apply(
-            is_valid_machine_id
-        )
+        df1["เครื่องจักรว่าง"].apply(is_valid_machine_id)
     ]
 
     total = df1["หมายเลขเครื่องจักร"].nunique()
@@ -135,16 +131,8 @@ if df1 is not None and df_own is not None and df_comp is not None:
         with left_chart:
 
             pie_df = pd.DataFrame({
-                "สถานะ": [
-                    "เช่าใช้งาน",
-                    "รอซ่อม",
-                    "ว่าง"
-                ],
-                "จำนวน": [
-                    rent_count,
-                    repair_count,
-                    vacant_count
-                ]
+                "สถานะ": ["เช่าใช้งาน", "รอซ่อม", "ว่าง"],
+                "จำนวน": [rent_count, repair_count, vacant_count]
             })
 
             fig = px.pie(
@@ -176,25 +164,11 @@ if df1 is not None and df_own is not None and df_comp is not None:
                 f"ว่าง : {vacant_count} คัน"
             )
 
-            own_done = (
-                df_own["วันที่ตรวจรับ"]
-                .notna()
-                .sum()
-            )
+            own_done = df_own["วันที่ตรวจรับ"].notna().sum()
+            own_pending = len(df_own) - own_done
 
-            own_pending = (
-                len(df_own) - own_done
-            )
-
-            comp_done = (
-                df_comp["วันที่ตรวจรับ"]
-                .notna()
-                .sum()
-            )
-
-            comp_pending = (
-                len(df_comp) - comp_done
-            )
+            comp_done = df_comp["วันที่ตรวจรับ"].notna().sum()
+            comp_pending = len(df_comp) - comp_done
 
             st.markdown("---")
 
@@ -213,82 +187,38 @@ if df1 is not None and df_own is not None and df_comp is not None:
             st.subheader("📈 หน่วยงานที่เช่าใช้")
 
             dept = (
-                df1.groupby(
-                    "หน่วยงานที่เช่าใช้"
-                )["หมายเลขเครื่องจักร"]
+                df1.groupby("หน่วยงานที่เช่าใช้")["หมายเลขเครื่องจักร"]
                 .count()
-                .sort_values(
-                    ascending=False
-                )
+                .sort_values(ascending=False)
             )
 
             st.bar_chart(dept)
 
     with tab2:
 
-        st.header(
-            "ผลการดำเนินงานซ่อมบำรุง"
-        )
+        st.header("ผลการดำเนินงานซ่อมบำรุง")
 
         left, right = st.columns(2)
 
         with left:
 
+            own_done = df_own["วันที่ตรวจรับ"].notna().sum()
+            own_pending = len(df_own) - own_done
+
             st.subheader("ซ่อมเอง")
-
-            own_done = (
-                df_own["วันที่ตรวจรับ"]
-                .notna()
-                .sum()
-            )
-
-            own_pending = (
-                len(df_own) - own_done
-            )
-
-            st.metric(
-                "งานทั้งหมด",
-                len(df_own)
-            )
-
-            st.metric(
-                "ตรวจรับแล้ว",
-                own_done
-            )
-
-            st.metric(
-                "ค้างตรวจรับ",
-                own_pending
-            )
+            st.metric("งานทั้งหมด", len(df_own))
+            st.metric("ตรวจรับแล้ว", own_done)
+            st.metric("ค้างตรวจรับ", own_pending)
 
         with right:
 
+            comp_done = df_comp["วันที่ตรวจรับ"].notna().sum()
+            comp_pending = len(df_comp) - comp_done
+
             st.subheader("เบ็ดเสร็จ")
-
-            comp_done = (
-                df_comp["วันที่ตรวจรับ"]
-                .notna()
-                .sum()
-            )
-
-            comp_pending = (
-                len(df_comp) - comp_done
-            )
-
-            st.metric(
-                "งานทั้งหมด",
-                len(df_comp)
-            )
-
-            st.metric(
-                "ตรวจรับแล้ว",
-                comp_done
-            )
-
-            st.metric(
-                "ค้างตรวจรับ",
-                comp_pending
-            )
+            st.metric("งานทั้งหมด", len(df_comp))
+            st.metric("ตรวจรับแล้ว", comp_done)
+            st.metric("ค้างตรวจรับ", comp_pending)
 
 else:
 
@@ -304,4 +234,5 @@ st.info(
     "กรุณาอัปโหลดไฟล์ Excel เพื่อเริ่มใช้งาน Dashboard"
 )
 ```
+
 
