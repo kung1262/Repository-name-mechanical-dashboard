@@ -17,10 +17,10 @@ def is_valid_machine_id(val):
     return bool(re.match(pattern, str(val).strip()))
 return False
 
-```
+
 pattern = r'^\d{2}-\d{4}-\d{2}-\d$'
 return bool(re.match(pattern, str(val).strip()))
-```
+
 
 def get_data(file, sheet, anchor):
 try:
@@ -30,7 +30,7 @@ sheet_name=sheet,
 header=None
 )
 
-```
+
     for i, row in df_raw.iterrows():
         if anchor in row.values:
             df = pd.read_excel(
@@ -44,7 +44,7 @@ except Exception:
     return None
 
 return None
-```
+
 
 st.title("📊 Executive Dashboard : ส่วนเครื่องกล")
 
@@ -55,7 +55,8 @@ type=["xlsx"]
 
 if uploaded_file:
 
-```
+
+
 st.sidebar.info(
     f"ไฟล์ปัจจุบัน : {uploaded_file.name}"
 )
