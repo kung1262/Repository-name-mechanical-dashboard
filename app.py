@@ -10,7 +10,11 @@ page_title="Executive Dashboard - ส่วนเครื่องกล"
 )
 
 def is_valid_machine_id(val):
-if pd.isna(val):
+    if pd.isna(val):
+        return False
+
+    pattern = r'^\d{2}-\d{4}-\d{2}-\d$'
+    return bool(re.match(pattern, str(val).strip()))
 return False
 
 ```
