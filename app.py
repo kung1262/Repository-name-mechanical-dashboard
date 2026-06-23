@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 import re
+import plotly.express as px
 
 st.set_page_config(layout="wide", page_title="Executive Dashboard - ส่วนเครื่องกล")
 
@@ -100,10 +101,65 @@ if uploaded_file:
             k3.metric("รอซ่อม", repair_count)
             k4.metric("ว่าง", vacant_count)
 
-            if "หน่วยงานที่เช่าใช้" in df1.columns:
-                st.bar_chart(
-                    df1.groupby("หน่วยงานที่เช่าใช้")["หมายเลขเครื่องจักร"].count()
-                )
+           st.markdown("---")
+
+col_left, col_right = st.columns(2)
+
+with col_left:
+
+```
+pie_df = pd.DataFrame({
+    "สถานะ": ["เช่าใช้งาน", "รอซ่อม", "ว่าง"],
+    "จำนวน": [rent_count, repair_count, vacant_count]
+})
+
+fig = px.pie(
+    pie_df,
+    names="สถานะ",
+    values="จำนวน",
+    hole=0.4,
+    title="สัดส่วนสถานะเครื่องจักร"
+)
+
+st.plotly_chart(fig, use_container_width=True)
+```
+
+with col_right:
+
+```
+st.subheader("📋 สรุปสถานะ")
+
+st.success(f"✅ เช่าใช้งาน : {rent_count} คัน")
+st.warning(f"🔧 รอซ่อม : {repair_count} คัน")
+st.info(f"📦 ว่าง : {vacant_count} คัน")
+
+own_done = df_own["วันที่ตรวจรับ"].notna().sum()
+own_pending = len(df_own) - own_done
+
+comp_done = df_comp["วันที่ตรวจรับ"].notna().sum()
+comp_pending = len(df_comp) - comp_done
+
+st.markdown("---")
+
+st.write(f"🔧 ซ่อมเองค้างตรวจรับ : {own_pending} รายการ")
+st.write(f"🏭 เบ็ดเสร็จค้างตรวจรับ : {comp_pending} รายการ")
+```
+
+st.markdown("---")
+
+if "หน่วยงานที่เช่าใช้" in df1.columns:
+
+```
+st.subheader("📈 หน่วยงานที่เช่าใช้")
+
+dept = (
+    df1.groupby("หน่วยงานที่เช่าใช้")["หมายเลขเครื่องจักร"]
+    .count()
+    .sort_values(ascending=False)
+)
+
+st.bar_chart(dept)
+```
 
         with tab2:
 
