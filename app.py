@@ -139,8 +139,7 @@ if df1 is not None and df_own is not None and df_comp is not None:
                 pie_df,
                 names="สถานะ",
                 values="จำนวน",
-                hole=0.45,
-                title="สัดส่วนสถานะเครื่องจักร"
+                hole=0.45
             )
 
             st.plotly_chart(
@@ -167,9 +166,10 @@ if df1 is not None and df_own is not None and df_comp is not None:
             st.write(f"🔧 ซ่อมเองค้างตรวจรับ : {own_pending} รายการ")
             st.write(f"🏭 เบ็ดเสร็จค้างตรวจรับ : {comp_pending} รายการ")
 
-        st.markdown("---")
-
         if "หน่วยงานที่เช่าใช้" in df1.columns:
+
+            st.markdown("---")
+            st.subheader("📈 หน่วยงานที่เช่าใช้")
 
             dept = (
                 df1.groupby("หน่วยงานที่เช่าใช้")["หมายเลขเครื่องจักร"]
@@ -177,7 +177,6 @@ if df1 is not None and df_own is not None and df_comp is not None:
                 .sort_values(ascending=False)
             )
 
-            st.subheader("📈 หน่วยงานที่เช่าใช้")
             st.bar_chart(dept)
 
     with tab2:
@@ -191,7 +190,7 @@ if df1 is not None and df_own is not None and df_comp is not None:
             own_done = df_own["วันที่ตรวจรับ"].notna().sum()
             own_pending = len(df_own) - own_done
 
-            st.subheader("ซ่อมเอง")
+            st.subheader("🔧 ซ่อมเอง")
             st.metric("งานทั้งหมด", len(df_own))
             st.metric("ตรวจรับแล้ว", own_done)
             st.metric("ค้างตรวจรับ", own_pending)
@@ -201,7 +200,7 @@ if df1 is not None and df_own is not None and df_comp is not None:
             comp_done = df_comp["วันที่ตรวจรับ"].notna().sum()
             comp_pending = len(df_comp) - comp_done
 
-            st.subheader("เบ็ดเสร็จ")
+            st.subheader("🏭 เบ็ดเสร็จ")
             st.metric("งานทั้งหมด", len(df_comp))
             st.metric("ตรวจรับแล้ว", comp_done)
             st.metric("ค้างตรวจรับ", comp_pending)
