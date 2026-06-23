@@ -10,17 +10,13 @@ page_title="Executive Dashboard - ส่วนเครื่องกล"
 )
 
 def is_valid_machine_id(val):
-    if pd.isna(val):
-        return False
-
-    pattern = r'^\d{2}-\d{4}-\d{2}-\d$'
-    return bool(re.match(pattern, str(val).strip()))
+if pd.isna(val):
 return False
 
-
+```
 pattern = r'^\d{2}-\d{4}-\d{2}-\d$'
 return bool(re.match(pattern, str(val).strip()))
-
+```
 
 def get_data(file, sheet, anchor):
 try:
@@ -30,7 +26,7 @@ sheet_name=sheet,
 header=None
 )
 
-
+```
     for i, row in df_raw.iterrows():
         if anchor in row.values:
             df = pd.read_excel(
@@ -44,7 +40,7 @@ except Exception:
     return None
 
 return None
-
+```
 
 st.title("📊 Executive Dashboard : ส่วนเครื่องกล")
 
@@ -55,8 +51,7 @@ type=["xlsx"]
 
 if uploaded_file:
 
-
-
+```
 st.sidebar.info(
     f"ไฟล์ปัจจุบัน : {uploaded_file.name}"
 )
@@ -157,17 +152,9 @@ if df1 is not None and df_own is not None and df_comp is not None:
 
             st.subheader("📋 สรุปสถานะ")
 
-            st.success(
-                f"เช่าใช้งาน : {rent_count} คัน"
-            )
-
-            st.warning(
-                f"รอซ่อม : {repair_count} คัน"
-            )
-
-            st.info(
-                f"ว่าง : {vacant_count} คัน"
-            )
+            st.success(f"เช่าใช้งาน : {rent_count} คัน")
+            st.warning(f"รอซ่อม : {repair_count} คัน")
+            st.info(f"ว่าง : {vacant_count} คัน")
 
             own_done = df_own["วันที่ตรวจรับ"].notna().sum()
             own_pending = len(df_own) - own_done
@@ -177,19 +164,12 @@ if df1 is not None and df_own is not None and df_comp is not None:
 
             st.markdown("---")
 
-            st.write(
-                f"🔧 ซ่อมเองค้างตรวจรับ : {own_pending} รายการ"
-            )
-
-            st.write(
-                f"🏭 เบ็ดเสร็จค้างตรวจรับ : {comp_pending} รายการ"
-            )
+            st.write(f"🔧 ซ่อมเองค้างตรวจรับ : {own_pending} รายการ")
+            st.write(f"🏭 เบ็ดเสร็จค้างตรวจรับ : {comp_pending} รายการ")
 
         st.markdown("---")
 
         if "หน่วยงานที่เช่าใช้" in df1.columns:
-
-            st.subheader("📈 หน่วยงานที่เช่าใช้")
 
             dept = (
                 df1.groupby("หน่วยงานที่เช่าใช้")["หมายเลขเครื่องจักร"]
@@ -197,6 +177,7 @@ if df1 is not None and df_own is not None and df_comp is not None:
                 .sort_values(ascending=False)
             )
 
+            st.subheader("📈 หน่วยงานที่เช่าใช้")
             st.bar_chart(dept)
 
     with tab2:
@@ -226,18 +207,12 @@ if df1 is not None and df_own is not None and df_comp is not None:
             st.metric("ค้างตรวจรับ", comp_pending)
 
 else:
-
     st.error(
         "⚠️ ไม่พบข้อมูลที่จำเป็น โปรดตรวจสอบชื่อ Sheet และหัวคอลัมน์"
     )
 ```
 
 else:
-
-```
 st.info(
-    "กรุณาอัปโหลดไฟล์ Excel เพื่อเริ่มใช้งาน Dashboard"
+"กรุณาอัปโหลดไฟล์ Excel เพื่อเริ่มใช้งาน Dashboard"
 )
-```
-
-
