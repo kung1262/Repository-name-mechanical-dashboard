@@ -10,34 +10,36 @@ page_title="Executive Dashboard - ส่วนเครื่องกล"
 )
 
 def is_valid_machine_id(val):
-    if pd.isna(val):
-        return False
+if pd.isna(val):
+return False
 
-    pattern = r'^\d{2}-\d{4}-\d{2}-\d$'
-    return bool(re.match(pattern, str(val).strip()))
+```
+pattern = r'^\d{2}-\d{4}-\d{2}-\d$'
+return bool(re.match(pattern, str(val).strip()))
 ```
 
 def get_data(file, sheet, anchor):
-    try:
-        df_raw = pd.read_excel(
-            file,
-            sheet_name=sheet,
-            header=None
-        )
+try:
+df_raw = pd.read_excel(
+file,
+sheet_name=sheet,
+header=None
+)
 
-        for i, row in df_raw.iterrows():
-            if anchor in row.values:
-                df = pd.read_excel(
-                    file,
-                    sheet_name=sheet,
-                    header=i
-                )
-                return df.dropna(how="all")
+```
+    for i, row in df_raw.iterrows():
+        if anchor in row.values:
+            df = pd.read_excel(
+                file,
+                sheet_name=sheet,
+                header=i
+            )
+            return df.dropna(how="all")
 
-    except Exception:
-        return None
-
+except Exception:
     return None
+
+return None
 ```
 
 st.title("📊 Executive Dashboard : ส่วนเครื่องกล")
@@ -105,10 +107,8 @@ if df1 is not None and df_own is not None and df_comp is not None:
         c6.metric("เบ็ดเสร็จ", len(df_comp))
 
     tab1, tab2 = st.tabs(
-        [
-            "หน้า 1 : ภาพรวมเครื่องจักร",
-            "หน้า 2 : งานซ่อมบำรุง"
-        ]
+        ["หน้า 1 : ภาพรวมเครื่องจักร",
+         "หน้า 2 : งานซ่อมบำรุง"]
     )
 
     with tab1:
@@ -167,6 +167,7 @@ if df1 is not None and df_own is not None and df_comp is not None:
         if "หน่วยงานที่เช่าใช้" in df1.columns:
 
             st.markdown("---")
+
             st.subheader("📈 หน่วยงานที่เช่าใช้")
 
             dept = (
