@@ -100,10 +100,36 @@ if uploaded_file:
             k3.metric("รอซ่อม", repair_count)
             k4.metric("ว่าง", vacant_count)
 
-            if "หน่วยงานที่เช่าใช้" in df1.columns:
-                st.bar_chart(
-                    df1.groupby("หน่วยงานที่เช่าใช้")["หมายเลขเครื่องจักร"].count()
-                )
+           import plotly.express as px
+
+st.markdown("---")
+
+col1, col2 = st.columns([2,1])
+
+with col1:
+
+    pie_df = pd.DataFrame({
+        "สถานะ": ["เช่าใช้งาน","รอซ่อม","ว่าง"],
+        "จำนวน": [rent_count, repair_count, vacant_count]
+    })
+
+    fig = px.pie(
+        pie_df,
+        names="สถานะ",
+        values="จำนวน",
+        hole=0.5,
+        title="สัดส่วนสถานะเครื่องจักร"
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+with col2:
+
+    st.subheader("สรุปผู้บริหาร")
+
+    st.success(f"✅ เช่าใช้งาน {rent_count} คัน")
+    st.warning(f"🔧 รอซ่อม {repair_count} คัน")
+    st.info(f"📦 ว่าง {vacant_count} คัน")
 
         with tab2:
 
