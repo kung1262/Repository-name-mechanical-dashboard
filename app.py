@@ -25,7 +25,26 @@ def get_data(file, sheet, anchor):
 
     return None
 
-st.title("📊 Executive Dashboard: ส่วนเครื่องกล")
+st.markdown("""
+<div style="
+background:linear-gradient(90deg,#0B5CAD,#1976D2);
+padding:25px;
+border-radius:15px;
+text-align:center;
+color:white;
+margin-bottom:20px;
+">
+
+<h2>🏛 กรมทางหลวง</h2>
+
+<h3>สำนักงานทางหลวงที่ 17</h3>
+
+<h3>ส่วนเครื่องกล</h3>
+
+<h1>Executive Dashboard</h1>
+
+</div>
+""", unsafe_allow_html=True)
 
 uploaded_file = st.file_uploader(
     "อัปโหลดไฟล์ Excel ประจำเดือน",
