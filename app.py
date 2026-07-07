@@ -50,7 +50,12 @@ uploaded_file = st.file_uploader(
     "อัปโหลดไฟล์ Excel ประจำเดือน",
     type=["xlsx"]
 )
+st.markdown("---")
 
+search_machine = st.text_input(
+    "🔎 ค้นหาหมายเลขเครื่องจักร",
+    placeholder="ตัวอย่าง 41-0001-01-1"
+)
 if uploaded_file:
 
     st.sidebar.info(f"ไฟล์ปัจจุบัน: {uploaded_file.name}")
@@ -79,7 +84,29 @@ if uploaded_file:
         )
 
     if df1 is not None and df_own is not None and df_comp is not None:
+        # ==============================
+        # ระบบค้นหาเครื่องจักร
+        # ==============================
 
+        if search_machine:
+
+            result = df1[
+                df1["หมายเลขเครื่องจักร"]
+                .astype(str)
+                .str.strip()
+                ==
+                search_machine.strip()
+            ]
+
+            if len(result) > 0:
+
+                st.success("พบข้อมูลเครื่องจักร")
+
+                st.dataframe(result, use_container_width=True)
+
+            else:
+
+                st.warning("ไม่พบหมายเลขเครื่องจักรนี้")
         repair_list = df1[
             df1["เครื่องจักรรอซ่อม"].apply(is_valid_machine_id)
         ]
