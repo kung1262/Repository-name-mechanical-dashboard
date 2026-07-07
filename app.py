@@ -91,13 +91,10 @@ if uploaded_file:
 
         if search_machine:
 
-            result = df1[
-                df1["หมายเลขเครื่องจักร"]
-                .astype(str)
-                .str.strip()
-                ==
-                search_machine.strip()
-            ]
+           result = df1[ df1["หมายเลขเครื่องจักร"] 
+            .astype(str) .str.strip() 
+            .str.contains(search_machine.strip(), case=False, 
+                          na=False) ]
 
             if len(result) > 0:
 
