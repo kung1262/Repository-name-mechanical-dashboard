@@ -84,6 +84,7 @@ if uploaded_file:
         )
 
     if df1 is not None and df_own is not None and df_comp is not None:
+        st.write(df1.columns)
         # ==============================
         # ระบบค้นหาเครื่องจักร
         # ==============================
