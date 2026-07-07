@@ -82,27 +82,38 @@ if uploaded_file:
             "เบ็ดเสร็จ",
             "หมายเลขเครื่องจักรกล"
         )
+if df1 is not None and df_own is not None and df_comp is not None:
 
-    if df1 is not None and df_own is not None and df_comp is not None:
-        st.write(df1.columns)
-        # ==============================
-        # ระบบค้นหาเครื่องจักร
-        # ==============================
+    # ==============================
+    # ระบบค้นหาเครื่องจักร
+    # ==============================
 
-        if search_machine:
+    if search_machine:
 
-           result = df1[ df1["หมายเลขเครื่องจักร"] 
-            .astype(str) .str.strip() 
-            .str.contains(search_machine.strip(), case=False, 
-                          na=False) ]
+        result = df1[
+            df1["หมายเลขเครื่องจักร"]
+            .astype(str)
+            .str.strip()
+            .str.contains(search_machine.strip(), case=False, na=False)
+        ]
 
-            if len(result) > 0:
+        if len(result) > 0:
 
-                st.success("พบข้อมูลเครื่องจักร")
+            st.success("พบข้อมูลเครื่องจักร")
 
-                st.dataframe(result, use_container_width=True)
+            st.dataframe(result, use_container_width=True)
 
-            else:
+        else:
+
+            st.warning("ไม่พบหมายเลขเครื่องจักรนี้")
+
+    repair_list = df1[
+        df1["เครื่องจักรรอซ่อม"].apply(is_valid_machine_id)
+    ]
+
+    vacant_list = df1[
+        df1["เครื่องจักรว่าง"].apply(is_valid_machine_id)
+    ]
 
                 st.warning("ไม่พบหมายเลขเครื่องจักรนี้")
         repair_list = df1[
