@@ -99,3 +99,208 @@ search_machine = st.text_input(
 )
 
 st.divider()
+# ==========================
+# READ EXCEL
+# ==========================
+
+if uploaded_file:
+
+    st.sidebar.success("โหลดไฟล์สำเร็จ")
+
+    st.sidebar.write(uploaded_file.name)
+
+    st.sidebar.write(
+        datetime.now().strftime("%d/%m/%Y %H:%M")
+    )
+
+    with st.spinner("กำลังอ่านข้อมูล..."):
+
+        df1 = get_data(
+            uploaded_file,
+            "Sheet1",
+            "หมายเลขเครื่องจักร"
+        )
+
+        df_own = get_data(
+            uploaded_file,
+            "ซ่อมเอง",
+            "หมายเลขเครื่องจักรกล"
+        )
+
+        df_comp = get_data(
+            uploaded_file,
+            "เบ็ดเสร็จ",
+            "หมายเลขเครื่องจักรกล"
+        )
+
+    if df1 is None:
+
+        st.error("ไม่พบข้อมูล Sheet1")
+
+        st.stop()
+
+    # ==========================
+    # SEARCH
+    # ==========================
+
+    if search_machine != "":
+
+        result = df1[
+            df1["หมายเลขเครื่องจักร"]
+            .astype(str)
+            .str.contains(
+                search_machine,
+                case=False,
+                na=False
+            )
+        ]
+
+        if len(result):
+
+            st.success("พบข้อมูล")
+
+            st.dataframe(
+                result,
+                use_container_width=True
+            )
+
+        else:
+
+            st.warning("ไม่พบหมายเลขเครื่องจักร")
+
+    # ==========================
+    # KPI
+    # ==========================
+
+    repair = df1[
+        df1["เครื่องจักรรอซ่อม"]
+        .apply(is_valid_machine_id)
+    ]
+
+    vacant = df1[
+        df1["เครื่องจักรว่าง"]
+        .apply(is_valid_machine_id)
+    ]
+
+    total = df1["หมายเลขเครื่องจักร"].nunique()
+
+    repair_count = len(repair)
+
+    vacant_count = len(vacant)
+
+    rent_count = total - repair_count - vacant_count
+
+    c1, c2, c3, c4 = st.columns(4)
+
+    c1.metric(
+        "เครื่องจักรทั้งหมด",
+        total
+    )
+
+    c2.metric(
+        "เช่าใช้งาน",
+        rent_count
+    )
+
+    c3.metric(
+        "รอซ่อม",
+        repair_count
+    )
+
+    c4.metric(
+        "ว่าง",
+        vacant_count
+    )
+
+    st.divider()
+    # ==========================
+# DASHBOARD
+# ==========================
+
+tab1, tab2 = st.tabs(
+    [
+        "📊 ภาพรวมเครื่องจักร",
+        "🔧 งานซ่อมบำรุง"
+    ]
+)
+
+# =====================================
+# TAB 1
+# =====================================
+
+with tab1:
+
+    st.subheader("ภาพรวมเครื่องจักร")
+
+    if "หน่วยงานที่เช่าใช้" in df1.columns:
+
+        chart = (
+            df1.groupby("หน่วยงานที่เช่าใช้")
+            ["หมายเลขเครื่องจักร"]
+            .count()
+            .sort_values(ascending=False)
+        )
+
+        st.bar_chart(chart)
+
+    st.write("")
+
+    st.dataframe(
+        df1,
+        use_container_width=True,
+        height=500
+    )
+
+# =====================================
+# TAB 2
+# =====================================
+
+with tab2:
+
+    left, right = st.columns(2)
+
+    with left:
+
+        st.subheader("🔧 ซ่อมเอง")
+
+        st.metric(
+            "จำนวนงาน",
+            len(df_own)
+        )
+
+        if "วันที่ตรวจรับ" in df_own.columns:
+
+            st.metric(
+                "ตรวจรับแล้ว",
+                df_own["วันที่ตรวจรับ"].notna().sum()
+            )
+
+        st.dataframe(
+            df_own,
+            use_container_width=True
+        )
+
+    with right:
+
+        st.subheader("🏭 เบ็ดเสร็จ")
+
+        st.metric(
+            "จำนวนงาน",
+            len(df_comp)
+        )
+
+        if "วันที่ตรวจรับ" in df_comp.columns:
+
+            st.metric(
+                "ตรวจรับแล้ว",
+                df_comp["วันที่ตรวจรับ"].notna().sum()
+            )
+
+        st.dataframe(
+            df_comp,
+            use_container_width=True
+        )
+
+else:
+
+    st.info("กรุณาอัปโหลดไฟล์ Excel")
